@@ -1,7 +1,7 @@
 package methods;
 
-import elements.MyFunction;
 import elements.Vector;
+import elements.MyFunction;
 
 public class GradientDescent {
     private final double epsilon;
@@ -30,7 +30,6 @@ public class GradientDescent {
             System.out.println(String.format("%s val: %.10f", x, fx));
             System.out.println("gradient abs: " + gradientFX.abs());
         }
-
         System.out.println(String.format("Result:\n%s val: %.10f", x, fx));
     }
 }

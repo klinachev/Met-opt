@@ -2,7 +2,6 @@ package elements;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Collectors;
 
 public class Vector {
@@ -24,6 +23,14 @@ public class Vector {
         );
     }
 
+    public Vector negate() {
+        final List<Double> value = new ArrayList<>();
+        for (int i = 0; i < point.size(); ++i) {
+            value.add(-point.get(i));
+        }
+        return new Vector(value);
+    }
+
     public Vector subtract(final Vector vector) {
         final List<Double> value = new ArrayList<>();
         for (int i = 0; i < point.size(); ++i) {
@@ -32,8 +39,21 @@ public class Vector {
         return new Vector(value);
     }
 
+    public Vector add(final Vector vector) {
+        final List<Double> value = new ArrayList<>();
+        for (int i = 0; i < point.size(); ++i) {
+            value.add(point.get(i) + vector.point.get(i));
+        }
+        return new Vector(value);
+    }
+
+
     public double abs() {
         return Math.sqrt(point.stream().reduce(0., (arg1, arg2) -> arg1 + arg2 * arg2));
+    }
+
+    public double absSqr() {
+        return point.stream().reduce(0., (arg1, arg2) -> arg1 + arg2 * arg2);
     }
 
     @Override
