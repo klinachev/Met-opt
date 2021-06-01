@@ -74,18 +74,19 @@ public class GaussMethod {
     }
 
     public static List<Double> run(final Table a, final List<Double> b) {
+//        System.out.println("a1 " + a);
+//        System.out.println("b1 " + b);
         forwardEliminationWithMax(a, b);
-//        Tester.printTable(a);
+//        System.out.println("a2 " + a);
+//        System.out.println("b2 " + b);
         final List<Double> list = backSubstitution(a, b);
-//        System.out.println(list);
+//        System.out.println("result " + list);
         return list;
     }
 
 
     public static Vector calc(final Table a, final Vector b) {
-        final TableImpl table = new TableImpl(a);
-        forwardElimination(table, new ArrayList<>(b.getPoint()));
-        return new Vector(backSubstitution(table, b.getPoint()));
+        return new Vector(run(new TableImpl(a), new ArrayList<>(b.getPoint())));
     }
 
 }

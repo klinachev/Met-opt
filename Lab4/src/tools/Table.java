@@ -5,8 +5,8 @@ import java.util.List;
 public interface Table extends List<List<Double>> {
     default void subtractLine(final int from, final int to, final double mull, final int start) {
         for (int i = start; i < size(); ++i) {
-            final Double value = get(to).get(i);
-            get(to).set(i, value - mull * get(from).get(i));
+            final Double value = get(to, i);
+            set(to, i, value - mull * get(from, i));
         }
     }
 

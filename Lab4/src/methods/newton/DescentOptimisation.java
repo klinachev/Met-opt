@@ -24,7 +24,7 @@ public class DescentOptimisation extends OneDimensionalSearch {
             final Vector gradX = grad.apply(x);
             Vector p = evaluateP(gradX, hessian.apply(x));
             if (p.scalar(gradX) > 0) {
-                System.out.println(" p * gradX > 0 " + x);
+//                System.out.println(" p * gradX > 0 " + x);
                 p = gradX.negate();
             }
 

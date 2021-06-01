@@ -16,7 +16,7 @@ public class OneDimensionalSearch extends DefaultNewtonMethod {
 
     protected double evaluateAlpha(
             final Function<Vector, Double> function, final Vector x, final Vector p) {
-        return method.calc(alpha1 -> function.apply(x.add(p.multiply(alpha1))), 0, 1e5);
+        return method.calc(alpha1 -> function.apply(x.add(p.multiply(alpha1))), 1, 1e5);
     }
 
     public Vector run(
@@ -33,7 +33,7 @@ public class OneDimensionalSearch extends DefaultNewtonMethod {
             final double alpha = evaluateAlpha(function, x, p);
             deltaX = p.multiply(alpha);
             x = x.add(deltaX);
-//            System.out.println("X: " + x);
+            System.out.println("X: " + x);
         }
         return x;
     }
