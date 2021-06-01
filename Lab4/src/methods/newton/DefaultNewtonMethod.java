@@ -27,7 +27,7 @@ public class DefaultNewtonMethod {
         while (deltaX == null || deltaX.abs() > epsilon) {
             deltaX = evaluateP(grad.apply(x), hessian.apply(x));
             x = x.add(deltaX);
-//            System.out.println(x);
+//            System.out.println(x + " ");
         }
         return x;
     }

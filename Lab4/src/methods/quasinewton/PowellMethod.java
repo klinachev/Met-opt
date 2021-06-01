@@ -2,6 +2,7 @@ package methods.quasinewton;
 
 import methods.one_dimentional.BrentsMethod;
 import tools.Vector;
+import tools.TableImpl;
 
 import java.util.List;
 import java.util.function.Function;
@@ -13,29 +14,29 @@ public class PowellMethod {
         this.method = method;
     }
 
-    static List<List<Double>> defaultTable(final int n) {
-        return null;
-    }
-
     public Vector run(
             final Function<Vector, Double> function,
             final Function<Vector, Vector> grad,
             Vector x,
             final double epsilon
     ) {
-        List<List<Double>> tableG = PowellMethod.defaultTable(x.size());
+        TableImpl G = new TableImpl(x.size(), 1.);
         Vector w = grad.apply(x).negate();
-        Vector p = w;
-        final Vector finalX = x;
-        double alpha = method.calc(a -> function.apply(finalX.add(p.multiply(a))), 0, 10);
-        Vector deltaX = p.multiply(alpha);
-        x = x.add(deltaX);
-        Vector newW = grad.apply(x).negate();
-        Vector deltaW = newW.subtract(w);
-        w = newW;
-        while (deltaX.abs() > epsilon) {
-            
-        }
+        Vector deltaX = null;
+        do {
+            Vector p = G.multiply(w);
+            final Vector finalX = x;
+            Vector finalP = p;
+            double alpha = method.calc(a -> function.apply(finalX.add(finalP.multiply(a))), 0, 1e5);
+            deltaX = p.multiply(alpha);
+            x = x.add(deltaX);
+            Vector newW = grad.apply(x).negate();
+            Vector deltaW = newW.subtract(w);
+            w = newW;
+            Vector GdeltaW = G.multiply(deltaW);
+            Vector deltaXWave = deltaX.add(GdeltaW);
+            G = G.subtract(BFShMethod.vectorsToTable(deltaXWave).divide(deltaW.scalar(deltaXWave)));
+        } while (deltaX.abs() > epsilon);
         return x;
     }
 }

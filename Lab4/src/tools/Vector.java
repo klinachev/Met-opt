@@ -28,6 +28,10 @@ public class Vector {
         return point.get(index);
     }
 
+    public void set(final int i, final double v) {
+        point.set(i, v);
+    }
+
     public Vector multiply(final double mul) {
         return new Vector(point.stream()
                 .map(value -> value * mul)
