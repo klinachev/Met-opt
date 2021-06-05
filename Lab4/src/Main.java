@@ -60,7 +60,7 @@ public class Main {
                 2 * v.get(1) - 1.2 * v.get(0));
         final Table hessian = new TableImpl(List.of(List.of(2., -1.2), List.of(-1.2, 2.)));
         final Vector x = Vector.of(4., 1.);
-        final double epsilon = 1e-7;
+        final double epsilon = 1e-5;
         test(function, grad, v -> hessian, x, epsilon);
     }
 
@@ -96,6 +96,122 @@ public class Main {
                         List.of(-400 * v.get(0), 200.))
         );
         final Vector x = Vector.of(-1.2, 1.);
+        final double epsilon = 1e-5;
+        test(function, grad, hessian, x, epsilon);
+    }
+
+    private void test_1_03() {
+        // 3x_1^2 + 7x_2^2 + 5x_1 * x_2 - 6x_1 - 11x_2
+        // x_0 = (-1.2, 1)
+        final Function<Vector, Double> function = v -> 3 * calc(v, 0, 2) + 7 * calc(v, 1, 2)
+                - 5 * v.get(0) * v.get(1) - 6 * v.get(0) - 11 * v.get(1);
+
+        final Function<Vector, Vector> grad = v ->
+                Vector.of(
+                        6 * v.get(0) - 5 * v.get(1) - 6,
+                        -5 * v.get(0) + 14 * v.get(1) - 11
+                );
+        final Table table = new TableImpl(
+                List.of(List.of(6., 5.),
+                        List.of(5., 14.))
+        );
+        final Function<Vector, Table> hessian = v -> table;
+        final Vector x = Vector.of(-1.2, 1.);
+        final double epsilon = 1e-5;
+        test(function, grad, hessian, x, epsilon);
+    }
+
+    private void test_03() {
+        final Function<Vector, Double> function = v -> calc(v, 0, 4) + calc(v, 1, 4) +
+                2 * calc(v, 0, 2) * v.get(1) + 2 * calc(v, 1, 2) * v.get(0) - 21 * calc(v, 0, 2)
+                - 13 * calc(v, 1, 2) - 14 * v.get(0) - 22 * v.get(1) + 170.;
+        final Function<Vector, Vector> grad = v -> Vector.of(
+                4 * calc(v, 0, 3) + 4 * v.get(0) * v.get(1) + 2 * calc(v, 1, 2) - 42. * v.get(0) - 14.,
+                4 * calc(v, 1, 3) + 4 * v.get(0) * v.get(1) + 2 * calc(v, 0, 2) - 26. * v.get(1) - 22.);
+        final Function<Vector, Table> hessian = v -> new TableImpl(
+                List.of(List.of(12 * calc(v, 0, 2) + 4 * v.get(1) - 42., 4 * v.get(0) + 4 * v.get(1)),
+                        List.of(4 * v.get(0) + 4 * v.get(1), 13 * calc(v, 1, 2) + 4 * v.get(0) - 26.))
+        );
+        final Vector x = Vector.of(5., 5.);
+        final double epsilon = 1e-7;
+        test(function, grad, hessian, x, epsilon);
+    }
+
+    private double sqr(double x) {
+        return x * x;
+    }
+
+    private void test_04() {
+        final Function<Vector, Double> function = v -> sqr(v.get(0) + 10 * v.get(1)) + 5 * sqr(v.get(2) - v.get(3))
+                + sqr(sqr(v.get(1) - 2 * v.get(2)))
+                + 10 * sqr(sqr(v.get(0) - v.get(3)));
+        final Function<Vector, Vector> grad = v -> Vector.of(
+                2 * (v.get(0) + 10 * v.get(1)) + 40 * sqr(v.get(0) - v.get(3)) * (v.get(0) - v.get(3)),
+                20 * (v.get(0) + 10 * v.get(1)) + 4 * sqr(v.get(1) - 2 * v.get(2)) * (v.get(1) - 2 * v.get(2)),
+                10 * (v.get(2) - v.get(3)) - 8 * sqr(v.get(1) - 2 * v.get(2)) * (v.get(1) - 2 * v.get(2)),
+                -10 * (v.get(2) - v.get(3)) - 40 * sqr(v.get(0) - v.get(3)) * (v.get(0) - v.get(3))
+        );
+        final Function<Vector, Table> hessian = v -> new TableImpl(
+                /*
+                List.of(List.of(2 + 120 * calc(v, 0, 2) -240 * v.get(0) * v.get(3),
+                                20.,
+                                0.,
+                                120 * calc(v, 3, 2) + 240 * v.get(0) * v.get(3) - 120 * calc(v, 0, 2)),
+                        List.of(20.,
+                                200. + 48 * calc(v, 2, 2) - 48 * v.get(1) * v.get(2),
+                                24 * v.get(1) * v.get(2) - 8 * v.get(2) - 8 * v.get(1),
+                                0.),
+                        List.of(0.,
+                                -96 * calc(v, 2, 2) + 96 * v.get(1) * v.get(2) - 16 * v.get(1),
+                                10. - 192 * v.get(1) * v.get(2) + 48 * calc(v, 1, 2) + 192 * calc(v, 2, 2),
+                                -10.),
+                        List.of(120 * calc(v, 3, 2) + 240 * v.get(0) * v.get(3) - 120 * calc(v, 0, 2), 0.,
+                                -10.,
+                                10. + 120 * calc(v, 3, 2) - 240 * v.get(0) * v.get(3) + 120 * calc(v, 0, 2)
+                        ))
+                 */
+                List.of(List.of(2 + 120 * sqr(v.get(0) - v.get(3)),
+                        20.,
+                        0.,
+                        -120 * sqr(v.get(0) - v.get(3))),
+                        List.of(20.,
+                                200. + 12. * sqr(v.get(1) - 2 * v.get(2)),
+                                -24 * sqr(v.get(1) - 2 * v.get(2)),
+                                0.),
+                        List.of(0.,
+                                -24 * sqr(v.get(1) - 2 * v.get(2)),
+                                10. + 48 * sqr(v.get(1) - 2 * v.get(2)),
+                                -10.),
+                        List.of(-120 * sqr(v.get(0) - v.get(3)),
+                                0.,
+                                -10.,
+                                10. + 120 * sqr(v.get(0) - v.get(3)))));
+        final Vector x = Vector.of(-1., 5., -1., 2.);
+        final double epsilon = 1e-7;
+        test(function, grad, hessian, x, epsilon);
+    }
+
+    double y(Vector v) {
+        return 1 + sqr((v.get(0) - 1) / 2) + sqr((v.get(1) - 1) / 3);
+    }
+
+    double z(Vector v) {
+        return 1 + sqr((v.get(0) - 2) / 2) + sqr((v.get(1) - 1) / 3);
+    }
+
+    private void test_05() {
+        final Function<Vector, Double> function = v -> 100. - 2. / y(v) - 1. / z(v);
+        final Function<Vector, Vector> grad = v -> Vector.of(
+                (v.get(0) - 1) / sqr(y(v)) + 0.5 *  (v.get(0) - 2) / sqr(z(v)),
+                4. / 9. * (v.get(1) - 1) / sqr(y(v)) + 2. / 9. * (v.get(1) - 1) / sqr(z(v)));
+        final Function<Vector, Table> hessian = v -> new TableImpl(
+                List.of(
+                        List.of((-sqr(v.get(0) - 1) + y(v)) / (y(v) * sqr(y(v))) + (-0.5 * sqr(v.get(0) - 2) + 0.5 * z(v)) / (z(v) * sqr(z(v))),
+                        4. / 9. * (v.get(1) - 1) * (1 - v.get(0)) / (y(v) * sqr(y(v))) - 2. / 9. * (v.get(0) - 2) * (v.get(1) - 1) / (z(v) * sqr(z(v)))),
+                        List.of(4. / 9. * (v.get(1) - 1) * (1 - v.get(0)) / (y(v) * sqr(y(v))) - 2. / 9. * (v.get(0) - 2) * (v.get(1) - 1) / (z(v) * sqr(z(v))),
+                                (- 16. / 81. * sqr(v.get(1) - 1) + 4. / 9. * y(v)) / (y(v) * sqr(y(v))) + (-8. / 81. * sqr(v.get(1) - 1) + 2. / 9. * z(v)) / (z(v) * sqr(z(v))))
+                ));
+        final Vector x = Vector.of(10., 10.);
         final double epsilon = 1e-7;
         test(function, grad, hessian, x, epsilon);
     }

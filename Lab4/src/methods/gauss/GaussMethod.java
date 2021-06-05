@@ -60,28 +60,33 @@ public class GaussMethod {
         }
     }
 
-    static List<Double> backSubstitution(final Table a, final List<Double> b) {
-        final List<Double> x = new ArrayList<>(Collections.nCopies(b.size(), null));
-        x.set(a.size() - 1, b.get(b.size() - 1) / a.get(a.size() - 1, a.size() - 1));
+    static void backSubstitution(final Table a, final List<Double> b) {
+        b.set(a.size() - 1, b.get(b.size() - 1) / a.get(a.size() - 1, a.size() - 1));
         for (int k = a.size() - 2; k >= 0; --k) {
             double value = 0;
             for (int j = k + 1; j < a.size(); ++j) {
-                value += a.get(k, j) * x.get(j);
+                value += a.get(k, j) * b.get(j);
             }
-            x.set(k, (b.get(k) - value) / a.get(k, k));
+            b.set(k, (b.get(k) - value) / a.get(k, k));
         }
-        return x;
     }
 
     public static List<Double> run(final Table a, final List<Double> b) {
+        try {
+
 //        System.out.println("a1 " + a);
 //        System.out.println("b1 " + b);
-        forwardEliminationWithMax(a, b);
+            forwardElimination(a, b);
 //        System.out.println("a2 " + a);
 //        System.out.println("b2 " + b);
-        final List<Double> list = backSubstitution(a, b);
+            backSubstitution(a, b);
 //        System.out.println("result " + list);
-        return list;
+            return b;
+        } catch (final Throwable throwable) {
+            System.out.println(a);
+            System.out.println(b);
+            throw throwable;
+        }
     }
 
 

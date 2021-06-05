@@ -14,11 +14,7 @@ public class DefaultNewtonMethod {
     }
 
     protected Vector evaluateP(final Vector gradX, final Table hessian) {
-//        System.out.println("Hessian: " + hessian);
-//        System.out.println("Grad: " + gradX.negate());
-        Vector result = soleMethod.apply(hessian, gradX.negate());
-//        System.out.println("result: " + result);
-        return result;
+        return soleMethod.apply(hessian, gradX.negate());
     }
 
     public Vector run(
@@ -28,10 +24,11 @@ public class DefaultNewtonMethod {
             final double epsilon
     ) {
         Vector deltaX = null;
+//        System.out.println(x + " " + grad.apply(x));
         while (deltaX == null || deltaX.abs() > epsilon) {
             deltaX = evaluateP(grad.apply(x), hessian.apply(x));
             x = x.add(deltaX);
-            System.out.println(x + " " + grad.apply(x));
+//            System.out.println(x + " " + grad.apply(x));
         }
         return x;
     }
