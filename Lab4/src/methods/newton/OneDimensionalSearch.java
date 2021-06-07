@@ -9,7 +9,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class OneDimensionalSearch extends DefaultNewtonMethod {
-    protected final Dichotomy method = new Dichotomy(1e-8);
+    protected final Dichotomy method = new Dichotomy(1e-6);
 
     public OneDimensionalSearch(final BiFunction<Table, Vector, Vector> soleMethod) {
         super(soleMethod);
@@ -27,16 +27,20 @@ public class OneDimensionalSearch extends DefaultNewtonMethod {
             Vector x,
             final double epsilon
     ) {
+        int iterations = -1;
         Vector deltaX = null;
-//        System.out.println(x + " " + grad.apply(x));
+        printPoint(x);
         while (deltaX == null || deltaX.abs() > epsilon) {
             final Vector p = evaluateP(grad.apply(x), hessian.apply(x));
 //            System.out.println("P: " + p);
             final double alpha = evaluateAlpha(function, x, p);
             deltaX = p.multiply(alpha);
             x = x.add(deltaX);
-//            System.out.println(alpha + " X: " + x + " delta x: " + deltaX);
+            iterations++;
+            printPoint(x);
+//            System.out.println(alpha + " X: " + x + " delta x: " + deltaX + " abs: " + deltaX.abs());
         }
+        System.out.println("\nIterations count: " + iterations);
         return x;
     }
 }

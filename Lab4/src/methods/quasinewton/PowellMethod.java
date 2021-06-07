@@ -1,10 +1,9 @@
 package methods.quasinewton;
 
 import methods.one_dimentional.BrentsMethod;
-import tools.Vector;
 import tools.TableImpl;
+import tools.Vector;
 
-import java.util.List;
 import java.util.function.Function;
 
 public class PowellMethod {

@@ -19,7 +19,9 @@ public class DescentOptimisation extends OneDimensionalSearch {
             Vector x,
             final double epsilon
     ) {
+        int iterations = -1;
         Vector deltaX = null;
+        printPoint(x);
         while (deltaX == null || deltaX.abs() > epsilon) {
             final Vector gradX = grad.apply(x);
             Vector p = evaluateP(gradX, hessian.apply(x));
@@ -27,11 +29,13 @@ public class DescentOptimisation extends OneDimensionalSearch {
 //                System.out.println(" p * gradX > 0 " + x);
                 p = gradX.negate();
             }
-
+            iterations++;
             final double alpha = evaluateAlpha(function, x, p);
             deltaX = p.multiply(alpha);
             x = x.add(deltaX);
+            printPoint(x);
         }
+        System.out.println("\nIterations count: " + iterations);
         return x;
     }
 }

@@ -81,8 +81,9 @@ public class Vector {
 
     @Override
     public String toString() {
-        return "Point{" +
+        return ("Point{" +
                 point.stream().map(d -> String.format("%.17f", d)).collect(Collectors.joining("; ")) +
-                "}";
+                "}").replace(',', '.');
     }
 }
+// Vector((2.98904,0), (2, -1.9802))
