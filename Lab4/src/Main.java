@@ -17,7 +17,7 @@ public class Main {
     final DefaultNewtonMethod method = new DefaultNewtonMethod(GaussMethod::calc);
     final OneDimensionalSearch method2 = new OneDimensionalSearch(GaussMethod::calc);
     final DescentOptimisation method3 = new DescentOptimisation(GaussMethod::calc);
-    final BFShMethod method4 = new BFShMethod(new BrentsMethod(1e-5));
+    final BFShMethod method4 = new BFShMethod();
     final PowellMethod method5 = new PowellMethod(new BrentsMethod(1e-5));
     final FastestDescent fastestDescent = new FastestDescent(100);
 
@@ -39,14 +39,14 @@ public class Main {
             final Vector x,
             final double epsilon
     ) {
-        System.out.println("Default: ");
-        printResult(function, grad, method.run(grad, hessian, x, epsilon));
-        System.out.println("\nOneDimensionalSearch: ");
-        printResult(function, grad, method2.run(function, grad, hessian, x, epsilon));
-        System.out.println("\nDescentOptimisation: ");
-        printResult(function, grad, method3.run(function, grad, hessian, x, epsilon));
-//        System.out.println("\nBFShMethod: ");
-//        printResult(function, grad, method4.run(function, grad, x, epsilon));
+//        System.out.println("Default: ");
+//        printResult(function, grad, method.run(grad, hessian, x, epsilon));
+//        System.out.println("\nOneDimensionalSearch: ");
+//        printResult(function, grad, method2.run(function, grad, hessian, x, epsilon));
+//        System.out.println("\nDescentOptimisation: ");
+//        printResult(function, grad, method3.run(function, grad, hessian, x, epsilon));
+        System.out.println("\nBFShMethod: ");
+        printResult(function, grad, method4.run(function, grad, x, epsilon));
 //        System.out.println("\nPowellMethod: ");
 //        printResult(function, grad, method5.run(function, grad, x, epsilon));
         System.out.println("\nFastestDescent: ");
@@ -142,7 +142,7 @@ public class Main {
                             dxdy),
                             List.of(dxdy, 372 * calc(v, 1, 2) - 26 * calc(v, 0, 2))));
         };
-        final Vector x = Vector.of(-10000., -10000.);
+        final Vector x = Vector.of(-100., -100.);
         final double epsilon = 1e-3;
         test(function, grad, hessian, x, epsilon);
     }
@@ -244,6 +244,6 @@ public class Main {
 
     public static void main(final String[] args) {
         final Main main = new Main();
-        main.test_02();
+        main.test_05();
     }
 }
